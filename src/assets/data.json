@@ -1,7 +1,6 @@
 {
     "name": "Gabriel",
     "age": 22,
-    
     "job": "Developer",
     "accesses": {
         "create": true,
@@ -82,6 +81,6 @@
             "While I primarily work with .NET/C# and Node.js, I have been programming for quite some time and have experience dabbling in several different environments.",
             "My top 5? From most to least experience: C#, JavaScript (ES6), Haxe, Python, C++"
         ],
-        "adaptive": "While I did attend Webster University for 2 years, everything I know I learned in high-school or through research."
+        "adaptive": "While I did attend Webster University for 2 years, most of what I know I learned in high-school or through research."
     }
 }
