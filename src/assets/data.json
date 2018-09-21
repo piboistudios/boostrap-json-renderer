@@ -1,0 +1,7 @@
+{
+    "name": "Gabriel",
+    "class": "Knight",
+    "authorized": [
+        true, true, false, false
+    ]
+}
