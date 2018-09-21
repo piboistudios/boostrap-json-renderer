@@ -1,7 +1,87 @@
 {
     "name": "Gabriel",
-    "class": "Knight",
-    "authorized": [
-        true, true, false, false
-    ]
+    "age": 22,
+    
+    "job": "Developer",
+    "accesses": {
+        "create": true,
+        "retrieve": true,
+        "edit": true,
+        "delete": false
+    },
+    "work experiences": [
+        {
+            "company": "Walgreens",
+            "position": "Photo Specialist",
+            "years-active": [
+                2014,
+                2015
+            ]
+        },
+        {
+            "company": "Pizza Hut",
+            "position": "Busboy / Driver",
+            "year-active": [
+                2016,
+                2017
+            ]
+        },
+        {
+            "company": "Marcone Supply",
+            "positions": [
+                "telesales agent",
+                "customer service rep",
+                "account manager",
+                "network admin (current)",
+                "software developer (current)"
+            ],
+            "years-active": [
+                2017,
+                2018,
+                "currently employed"
+            ]
+        }
+    ],
+    "skills": {
+        "programming": [
+            "DM",
+            "C#",
+            "C++",
+            "C",
+            "JavaScript",
+            "Java",
+            "Haxe",
+            "Python",
+            "PHP",
+            "Neko"
+        ],
+        "art": [
+            "UI/UX",
+            "Traditional (Sketch)",
+            "Digital (Pixel-Art)"
+        ],
+        "math": [
+            "Algebra",
+            "Calculus",
+            "Statistics",
+            "Business Math"
+        ],
+        "advanced problem solving": "I have very advanced problem solving and debugging skills. I've only be shooting down compile-time and runtime errors since I was 12, haha!"
+    },
+    "qualities": {
+        "fast": [
+            "I have an average WPM of 120.",
+            {
+                "I am very goal-driven. I like to think of myself as being in one of two states": [
+                    "achieving a goal",
+                    "identifying an objective and developing a goal"
+                ]
+            }
+        ],
+        "versatile": [
+            "While I primarily work with .NET/C# and Node.js, I have been programming for quite some time and have experience dabbling in several different environments.",
+            "My top 5? From most to least experience: C#, JavaScript (ES6), Haxe, Python, C++"
+        ],
+        "adaptive": "While I did attend Webster University for 2 years, everything I know I learned in high-school or through research."
+    },
 }
