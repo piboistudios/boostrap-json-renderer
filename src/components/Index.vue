@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import data from "../assets/data.json";
+import data from "../assets/data-test.json";
 window.onkeypress = function(event) {
   if (event.ctrlKey || event.metaKey) {
     switch (String.fromCharCode(event.which).toLowerCase()) {
