@@ -23,8 +23,19 @@
         )
     b-row
       b-btn(variant="link" @click="$refs.modal.show()") Change Data
+    
+    b-form-group(
+      label="Editable"
+      label-for="editable-input"
+      id="editable-fieldset"
+      description="Edit form?"
+    )
+        b-form-checkbox(
+          id="editable-input"
+          v-model="input.editable"
+        )
     div(class="text-left")
-      b-json-renderer(root :data-object=`internal.data && internal.data || {}`)
+      b-json-renderer(:editable="input.editable" root :data-object=`internal.data && internal.data || {}`)
 </template>
 
 <script>
@@ -45,6 +56,7 @@ export default {
       input: {
         data: "",
         jsonFile: null,
+        editable: false,
 
       }
     };
