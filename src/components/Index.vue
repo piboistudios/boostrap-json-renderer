@@ -34,18 +34,23 @@
           id="editable-input"
           v-model="input.editable"
         )
-    div(class="text-left")
+    b-card(class="text-left bg-light" no-body )
       b-json-renderer(:editable="input.editable" root :data-object=`internal.data && internal.data || {}`)
 </template>
 
 <script>
 import data from "../assets/data.json";
-
+let dataEl = document.querySelector('#dataset');
+let preData = null;
+if(dataEl) {
+  preData = JSON.parse(dataEl.innerHTML);
+}
 export default {
   name: "index",
   data() {
     return {
       internal: {
+        dataChanged: false,
         setData: {
           fromFile: false,
         },
@@ -62,10 +67,12 @@ export default {
     };
   },
   mounted() {
-    console.log(data);
+    if(preData != null) this.internal.data.data = preData;
   },
   methods: {
     setData() {
+      this.internal.dataChanged = true;
+      this.$forceUpdate();
       if(this.internal.setData.fromFile) {
         let jsonFile = this.input.jsonFile;
         if(jsonFile) {

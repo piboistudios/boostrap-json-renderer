@@ -5,12 +5,23 @@
       variant="success"
       @click="save"
     ) Save
-    b-input(
+    div(
       v-if="dataObject.data === {} || dataObject.data === null || type === 'number' || type === 'string'" 
-      @change="evt => changeData($el, evt)"
-      :placeholder="type"
-      :value="dataObject.data"
     )
+      b-input(
+        v-if="(type === 'string' && dataObject.data.length < 20) || type !== 'string'"
+        @change="evt => changeData($el, evt)"
+        :placeholder="type"
+        :value="dataObject.data"
+      )
+      b-textarea(
+        v-else
+        @change="evt => changeData($el, evt)"
+        :placeholder="type"
+        :value="dataObject.data"
+        :rows="4"
+        :max-rows="6"
+      )
     div(v-else-if="type === 'boolean'" )
       b-btn(
         variant="link"
@@ -244,8 +255,9 @@ export default {
     save(evt) {
       download(JSON.stringify(this.dataObject.data, null, 4), 'data-object.json', 'application/json');
     },
-    toggleData() {
+    toggleData(evt) {
       this.dataObject.data = !this.dataObject.data;
+      this.$emit('input', this.dataObject.data);
       console.log(this.dataObject);
       this.$forceUpdate();
     },
