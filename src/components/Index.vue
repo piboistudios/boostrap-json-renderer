@@ -40,9 +40,28 @@
 
 <script>
 import data from "../assets/data.json";
-let dataEl = document.querySelector('#dataset');
+window.onkeypress = function(event) {
+  if (event.ctrlKey || event.metaKey) {
+    switch (String.fromCharCode(event.which).toLowerCase()) {
+      case "s":
+        event.preventDefault();
+        alert("ctrl-s");
+        break;
+      case "f":
+        event.preventDefault();
+        alert("ctrl-f");
+        break;
+      case "g":
+        event.preventDefault();
+        alert("ctrl-g");
+        break;
+    }
+  }
+};
+
+let dataEl = document.querySelector("#dataset");
 let preData = null;
-if(dataEl) {
+if (dataEl) {
   preData = JSON.parse(dataEl.innerHTML);
 }
 export default {
@@ -52,7 +71,7 @@ export default {
       internal: {
         dataChanged: false,
         setData: {
-          fromFile: true,
+          fromFile: true
         },
         data: {
           data: data
@@ -61,21 +80,20 @@ export default {
       input: {
         data: "",
         jsonFile: null,
-        editable: true,
-
+        editable: true
       }
     };
   },
   mounted() {
-    if(preData != null) this.internal.data.data = preData;
+    if (preData != null) this.internal.data.data = preData;
   },
   methods: {
     setData() {
       this.internal.dataChanged = true;
       this.$forceUpdate();
-      if(this.internal.setData.fromFile) {
+      if (this.internal.setData.fromFile) {
         let jsonFile = this.input.jsonFile;
-        if(jsonFile) {
+        if (jsonFile) {
           var reader = new FileReader();
           reader.onloadend = event => {
             this.internal.data.data = JSON.parse(reader.result);
@@ -83,10 +101,9 @@ export default {
           reader.readAsText(jsonFile);
           reader.onerror = event => {
             console.error(event);
-          }
+          };
         }
-      }
-      else this.internal.data.data = JSON.parse(this.input.data);
+      } else this.internal.data.data = JSON.parse(this.input.data);
     }
   }
 };

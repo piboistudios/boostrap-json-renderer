@@ -1,23 +1,26 @@
 <template lang="pug">
   b-container(v-if="editable" class="w-100")
-    b-btn(
-      v-if="root"
-      variant="success"
-      @click="save"
-    ) Save
+    b-row(align-h="center")
+      b-btn(
+        v-if="root"
+        variant="success"
+        @click="save"
+        size="lg"
+        class="m-2"
+      ) Save
     div(
       v-if="dataObject.data === {} || dataObject.data === null || type === 'number' || type === 'string'" 
     )
       b-input(
-        v-if="(type === 'string' && dataObject.data.length < 20) || type !== 'string'"
+        v-if="(type === 'string' && dataObject.data.length < 15) || type !== 'string'"
         @change="evt => changeData($el, evt)"
-        :placeholder="type"
+        
         :value="dataObject.data"
       )
       b-textarea(
         v-else
         @change="evt => changeData($el, evt)"
-        :placeholder="type"
+        
         :value="dataObject.data"
         :rows="4"
         :max-rows="6"
@@ -104,6 +107,14 @@
               editable
               @input="val => item = val"
             )
+    b-row(align-h="center")
+      b-btn(
+        v-if="root"
+        variant="success"
+        @click="save"
+        size="lg"
+        class="m-2"
+      ) Save
   div(v-else)
     //- p(v-text="type")
     span(
