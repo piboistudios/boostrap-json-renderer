@@ -21,8 +21,8 @@
           :max-rows="10"
           v-model="input.data"
         )
-    b-row
-      b-btn(variant="link" @click="$refs.modal.show()") Change Data
+    b-row(align-h="center")
+      b-btn(variant="primary" size="lg" @click="$refs.modal.show()") Change Data
     
     b-form-group(
       label="Editable"
@@ -52,7 +52,7 @@ export default {
       internal: {
         dataChanged: false,
         setData: {
-          fromFile: false,
+          fromFile: true,
         },
         data: {
           data: data
@@ -61,7 +61,7 @@ export default {
       input: {
         data: "",
         jsonFile: null,
-        editable: false,
+        editable: true,
 
       }
     };
