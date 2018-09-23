@@ -13,13 +13,13 @@
     )
       b-input(
         v-if="(type === 'string' && dataObject.data.length < 15) || type !== 'string'"
-        @change="evt => changeData($el, evt)"
+        @input="evt => changeData($el, evt)"
         
         :value="dataObject.data"
       )
       b-textarea(
         v-else
-        @change="evt => changeData($el, evt)"
+        @input="evt => changeData($el, evt)"
         
         :value="dataObject.data"
         :rows="4"
