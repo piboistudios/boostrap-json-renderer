@@ -54,7 +54,7 @@
             label(class="border-bottom border-secondary font-weight-bold small mr-3" v-text="`${key}:`")
           b-row
             b-json-renderer(:id="key" editable @input="val => dataObject.data[key] = val" :filter="input.filter[0]" class="ml-5" :data-object="{data: dataObject.data[key]}")
-    b-card(v-else-if="type == 'array'" :class="['w-100',root ? 'bg-light border-dark' : 'border']")
+    b-card(v-else-if="type == 'array'" :class="['w-100',root ? 'bg-light border' : 'border']")
       b-btn(
         variant="primary"
         v-if="canAddNewInstance()"
@@ -147,7 +147,7 @@
             label(class="border-bottom border-secondary font-weight-bold small mr-3" v-text="`${key}:`")
           b-row
             b-json-renderer(:id="key" :filter="input.filter[0]" class="ml-5" :data-object="{data: dataObject.data[key]}")
-    b-card(v-else-if="type == 'array'" :class="root ? 'bg-light border-dark' : 'border'")
+    b-card(v-else-if="type == 'array'" :class="root ? 'bg-light border' : 'border'")
       b-list-group(
         flush
       )
