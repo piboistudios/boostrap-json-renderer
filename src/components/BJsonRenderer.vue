@@ -39,9 +39,9 @@
       class="w-100"
     )
       b-row(v-if="root")
-        b-input-group(class="my-2")
+        b-input-group(class="my-2" v-if="!Array.isArray(dataObject.data) && typeof dataObject.data == 'object'" )
           vue-bootstrap-typeahead(
-            v-if="!Array.isArray(dataObject.data) && typeof dataObject.data == 'object'" 
+            
             v-model="input.filter[0]"
             :data="Object.keys(dataObject.data).map(key => `${key}: ${getText(dataObject.data[key])}`)"
             @hit="input.filter[0] = $event.substring(0, $event.indexOf(':'))"
@@ -50,8 +50,10 @@
             fa-icon(icon="search")
       div(v-for="(key, index) in Object.keys(dataObject.data)" :key="index")
         div(v-if="testFilter(input.filter[0], key) || testFilter(input.filter[0], dataObject.data[key])")
-          b-row
-            label(class="border-bottom border-secondary font-weight-bold small mr-3" v-text="`${key}:`")
+          b-row(v-if="getType(dataObject.data) != 'array'")
+            label(:class="['border-bottom', 'border-secondary', 'font-weight-bold', 'mr-3', getType(dataObject.data[key]) == 'object' ? `h${Math.min(depth+1, 6)}` : 'small']" v-text="`${key}:`")
+          b-row(v-else)
+            hr 
           b-row
             b-json-renderer(:id="key" editable @input="val => dataObject.data[key] = val" :filter="input.filter[0]" class="ml-5" :data-object="{data: dataObject.data[key]}")
     b-card(v-else-if="type == 'array'" :class="['w-100',root ? 'bg-light border' : 'border']")
@@ -84,9 +86,9 @@
                 h2(v-text="`Item ${index + 1}`" class="text-center w-100")
             b-collapse(v-model="!input.showing[index]" id="collapse")
               b-row(class="py-1 my-3 border-top border-bottom")
-                b-input-group(class="my-2")
+                b-input-group(class="my-2"  v-if="!Array.isArray(item) && typeof item == 'object'" )
                   vue-bootstrap-typeahead(
-                    v-if="!Array.isArray(item) && typeof item == 'object'" 
+                   
                     v-model="input.filter[index]"
                     :data="Object.keys(item).map(key => `${key}: ${getText(item[key])}`)"
                     @hit="input.filter[index] = $event.substring(0, $event.indexOf(':'))"
@@ -97,6 +99,7 @@
                 :filter="input.filter[index]"
                 :data-object="{data: item}"
                 editable
+                :depth="depth+1"
                 @input="val => item = val"
               )
               hr(v-if="root" class="bg-secondary p-1")
@@ -105,6 +108,7 @@
               :filter="input.filter[index]"
               :data-object="{data: item}"
               editable
+              :depth="depth+1"
               @input="val => item = val"
             )
     b-row(align-h="center")
@@ -115,8 +119,9 @@
         size="lg"
         class="m-2"
       ) Save
+
+
   div(v-else)
-    //- p(v-text="type")
     span(
       v-if="['string','number'].indexOf(type) >= 0" 
       :class="getClass(dataObject)" 
@@ -132,9 +137,9 @@
       v-else-if="type == 'object'" 
     )
       b-row(v-if="root")
-        b-input-group(class="my-2")
+        b-input-group(class="my-2" v-if="!Array.isArray(dataObject.data) && typeof dataObject.data == 'object'" )
           vue-bootstrap-typeahead(
-            v-if="!Array.isArray(dataObject.data) && typeof dataObject.data == 'object'" 
+            
             v-model="input.filter[0]"
             :data="Object.keys(dataObject.data).map(key => `${key}: ${getText(dataObject.data[key])}`)"
             @hit="input.filter[0] = $event.substring(0, $event.indexOf(':'))"
@@ -143,10 +148,18 @@
             fa-icon(icon="search")
       div(v-for="(key, index) in Object.keys(dataObject.data)" :key="index")
         div(v-if="testFilter(input.filter[0], key) || testFilter(input.filter[0], dataObject.data[key])")
+          b-row(v-if="getType(dataObject.data) != 'array'")
+            label(:class="['border-bottom', 'border-secondary', 'font-weight-bold', 'mr-3', getType(dataObject.data[key]) == 'object' ? `h${Math.min(depth+1, 6)}` : 'small']" v-text="`${key}:`")
+          b-row(v-else)
+            hr
           b-row
-            label(class="border-bottom border-secondary font-weight-bold small mr-3" v-text="`${key}:`")
-          b-row
-            b-json-renderer(:id="key" :filter="input.filter[0]" class="ml-5" :data-object="{data: dataObject.data[key]}")
+            b-json-renderer(
+              :id="key" 
+              :filter="input.filter[0]" 
+              :depth="depth+1" 
+              class="ml-5" 
+              :data-object="{data: dataObject.data[key]}"
+            )
     b-card(v-else-if="type == 'array'" :class="root ? 'bg-light border' : 'border'")
       b-list-group(
         flush
@@ -182,12 +195,14 @@
               b-json-renderer(
                 :filter="input.filter[index]"
                 :data-object="{data: item}"
+                :depth="depth+1"
               )
               hr(v-if="root" class="bg-secondary p-1")
           b-json-renderer(
               v-else
               :filter="input.filter[index]"
               :data-object="{data: item}"
+              :depth="depth+1"
             )
 
 
@@ -199,7 +214,7 @@
 
 <script>
 import { find } from "../deep-search.js";
-import download from 'downloadjs';
+import download from "downloadjs";
 
 export default {
   name: "b-json-renderer",
@@ -210,6 +225,10 @@ export default {
     dataObject: {
       type: Object,
       required: true
+    },
+    depth: {
+      type: Number,
+      default: 1
     },
     root: {
       type: Boolean,
@@ -222,13 +241,14 @@ export default {
       type: Boolean,
       default: false
     },
-    property: Object|String|Number|Boolean
+    property: Object | String | Number | Boolean
   },
 
   data() {
     return {
+      Math,
       type: null,
-      originalVal: '',
+      originalVal: "",
       input: {
         filter: [],
         showing: []
@@ -261,23 +281,29 @@ export default {
       return !filter || find(data, filter).length > 0;
     },
     getClass(dataObject) {
-      return this.originalVal != this.dataObject.data ? 'edited' : '';
+      return this.originalVal != this.dataObject.data ? "edited" : "";
     },
     save(evt) {
-      download(JSON.stringify(this.dataObject.data, null, 4), 'data-object.json', 'application/json');
+      download(
+        JSON.stringify(this.dataObject.data, null, 4),
+        "data-object.json",
+        "application/json"
+      );
     },
     toggleData(evt) {
       this.dataObject.data = !this.dataObject.data;
-      this.$emit('input', this.dataObject.data);
-      console.log(this.dataObject);
-      this.$forceUpdate();
+      this.$emit("input", this.dataObject.data);
+      // console.log(this.dataObject);
+      // this.$forceUpdate();
     },
     changeData(obj, evt) {
-      obj.className = obj.className.replace('edited','');
-      obj.className = this.originalVal != this.dataObject.data ? `${obj.className} ${this.getClass()}` : obj.className;
-      console.log(evt);
-      this.$emit('input', evt);
-      
+      obj.className = obj.className.replace("edited", "");
+      obj.className =
+        this.originalVal != this.dataObject.data
+          ? `${obj.className} ${this.getClass()}`
+          : obj.className;
+      // console.log(evt);
+      this.$emit("input", evt);
     },
     render() {
       let nothing = () => {};

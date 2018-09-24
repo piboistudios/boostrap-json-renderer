@@ -22,8 +22,10 @@
           v-model="input.data"
         )
     b-row(align-h="center")
-      b-btn(variant="primary" size="lg" @click="$refs.modal.show()") Change Data
-    
+      b-col
+        b-btn-group(vertical)
+          b-btn(:class="w-100" variant="primary" size="lg" @click="$refs.modal.show()") Change Data
+          b-btn(:class="w-100" variant="secondary" size="lg" @click="getRandomData") Get Random Data
     b-form-group(
       label="Editable"
       label-for="editable-input"
@@ -40,6 +42,7 @@
 
 <script>
 import data from "../assets/data-test.json";
+import axios from "axios";
 window.onkeypress = function(event) {
   if (event.ctrlKey || event.metaKey) {
     switch (String.fromCharCode(event.which).toLowerCase()) {
@@ -74,7 +77,7 @@ export default {
           fromFile: true
         },
         data: {
-          data: data
+          data: {}
         }
       },
       input: {
@@ -86,12 +89,27 @@ export default {
   },
   mounted() {
     if (preData != null) this.internal.data.data = preData;
+    else this.getRandomData();
   },
   methods: {
-    setData() {
+    getRandomData() {
+      axios
+        .get("https://randomuser.me/api/", {
+          params: {
+            dataType: "json",
+            results: Math.round(Math.random() * 20)
+          }
+        })
+        .then(response => {
+          this.setData(JSON.stringify(response.data.results));
+          console.log(response);
+        });
+    },
+    setData(data) {
       this.internal.dataChanged = true;
+      console.log({ data });
       this.$forceUpdate();
-      if (this.internal.setData.fromFile) {
+      if (!data && this.internal.setData.fromFile) {
         let jsonFile = this.input.jsonFile;
         if (jsonFile) {
           var reader = new FileReader();
@@ -103,7 +121,10 @@ export default {
             console.error(event);
           };
         }
-      } else this.internal.data.data = JSON.parse(this.input.data);
+      } else {
+        this.internal.data.data = JSON.parse(data || this.input.data);
+        console.log(Array.isArray(this.internal.data.data));
+      }
     }
   }
 };
