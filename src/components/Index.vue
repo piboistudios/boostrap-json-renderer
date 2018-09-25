@@ -107,9 +107,8 @@ export default {
     },
     setData(data) {
       this.internal.dataChanged = true;
-      console.log({ data });
       this.$forceUpdate();
-      if (!data && this.internal.setData.fromFile) {
+      if (this.internal.setData.fromFile) {
         let jsonFile = this.input.jsonFile;
         if (jsonFile) {
           var reader = new FileReader();
@@ -122,8 +121,8 @@ export default {
           };
         }
       } else {
-        this.internal.data.data = JSON.parse(data || this.input.data);
-        console.log(Array.isArray(this.internal.data.data));
+        this.internal.data.data = JSON.parse( this.input.data);
+        console.log("data", this.input.data);
       }
     }
   }
